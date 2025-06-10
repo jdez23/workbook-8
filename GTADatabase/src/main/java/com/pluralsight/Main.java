@@ -29,14 +29,6 @@ public class Main {
             System.out.println("1. Suspect Scanner (WHERE)");
             System.out.println("2. Vehicle Watchlist (JOIN + WHERE)");
             System.out.println("3. Reward Tracker (GROUP BY + SUM + ORDER BY)");
-            System.out.println("4. Elite Agent Filter (GROUP BY + HAVING)");
-            System.out.println("5. Search Person");
-            System.out.println("6. Search Vehicle");
-            System.out.println("7. Search Vehicles A Person Owns");
-            System.out.println("8. Find AVG Mission Payout");
-            System.out.println("9. Find Inactive Agents");
-            System.out.println("10. Find Top Earning Criminals");
-            System.out.println("0. Exit");
             System.out.print("Select mission: ");  // Prompt without newline
 
             int choice = inputScanner.nextInt();  // Read user's menu choice
