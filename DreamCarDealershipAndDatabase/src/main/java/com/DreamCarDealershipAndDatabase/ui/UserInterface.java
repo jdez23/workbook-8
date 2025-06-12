@@ -1,4 +1,5 @@
 package com.DreamCarDealershipAndDatabase.ui;
+import com.DreamCarDealershipAndDatabase.contract.*;
 import com.DreamCarDealershipAndDatabase.data.*;
 import com.DreamCarDealershipAndDatabase.model.Vehicle;
 
@@ -44,7 +45,11 @@ public class UserInterface {
                 case "9":
                     processRemoveVehicleRequest();
                     break;
-                case "99":
+                case "10":
+                    processContractCreation();
+                    break;
+
+                case "0":
                     System.out.println("Goodbye!");
                     return;
                 default:
@@ -70,7 +75,8 @@ public class UserInterface {
         System.out.println("  7 - List ALL vehicles");
         System.out.println("  8 - Add a vehicle");
         System.out.println("  9 - Remove a vehicle");
-        System.out.println(" 99 - Quit");
+        System.out.println("  10 - Create a contract for sale or lease");
+        System.out.println("  0 - Quit");
         System.out.print("> ");
     }
 
@@ -88,6 +94,49 @@ public class UserInterface {
         List<Vehicle> all = dealership.getAllVehicles();
         displayVehicles(all);
     }
+
+    private void processContractCreation() {
+        System.out.print("Enter VIN of vehicle to purchase or lease: ");
+        int vin = Integer.parseInt(scanner.nextLine());
+
+        Vehicle selected = dealership.getAllVehicles().stream()
+                .filter(v -> v.getVin() == vin)
+                .findFirst()
+                .orElse(null);
+
+        if (selected == null) {
+            System.out.println("Vehicle not found.");
+            return;
+        }
+
+        System.out.print("Enter date (YYYYMMDD): ");
+        String date = scanner.nextLine();
+
+        System.out.print("Customer name: ");
+        String name = scanner.nextLine();
+
+        System.out.print("Customer email: ");
+        String email = scanner.nextLine();
+
+        System.out.print("Sale or Lease? (S/L): ");
+        String type = scanner.nextLine().trim().toUpperCase();
+
+        Contract contract;
+        if (type.equals("S")) {
+            System.out.print("Finance? (yes/no): ");
+            boolean finance = scanner.nextLine().equalsIgnoreCase("yes");
+
+            contract = new SalesContract(date, name, email, selected, finance);
+        } else {
+            contract = new LeaseContract(date, name, email, selected);
+        }
+
+        // Save contract
+        new ContractFileManager().saveContract(contract);
+        dealership.removeVehicle(selected);
+        System.out.println("Contract saved and vehicle removed from inventory.");
+    }
+
 
 
     private void processFindByPriceRange() {}
